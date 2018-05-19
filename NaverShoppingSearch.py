@@ -1,10 +1,25 @@
 from tkinter import *  # GUI를 위한 tkinter 모듈
+import tkinter.messagebox 
+from selenium import webdriver
 
 def confirmColorEntryFlag():  # CheckBox에 따라 색깔 입력 칸 normal or disable  
     if check.get() == 1:
         colorEntry.config(state="normal")
     else:
         colorEntry.config(state="disable")
+
+def searchStart():  # Entry에 입력한 값들로 '네이버쇼핑' 검색 시작 
+    if brandEntry.get() == "" or nameEntry.get() == "" or sizeEntry.get() =="":
+        tkinter.messagebox.showwarning("NaverShoppingSearch","모든 정보를 다 기입해 주세요") 
+        return
+    if check.get() == 1 and colorEntry.get() == "":
+        tkinter.messagebox.showwarning("NaverShoppingSearch","모든 정보를 다 기입해 주세요") 
+        return
+
+    url = "https://search.shopping.naver.com/search/all.nhn?query="+brandEntry.get() + "+" + nameEntry.get()
+    driver = webdriver.Chrome()
+    driver.get(url)
+
 
 window = Tk() # 윈도우 생성
 window.title("Naver Shopping Searcher")
@@ -23,7 +38,7 @@ colorEntryFlag = Checkbutton(window, text="색깔 입력", variable = check,comm
 colorEntry = Entry(window)
 colorEntry.config(state="disable")
 
-button1 = Button(window, text="검색") 
+button1 = Button(window, text="검색", command = searchStart) 
 
 brandLabel.grid(row=0, column=0, sticky =E)
 nameLabel.grid(row=1, column=0, sticky =E)
